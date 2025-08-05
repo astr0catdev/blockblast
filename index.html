@@ -1,116 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Block Blast Puzzle</title>
-
-  <!-- Viewport & Web App Setup -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Block Blast">
-  <meta name="theme-color" content="#000000">
-
-  <!-- ✅ Your custom icons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://play-lh.googleusercontent.com/R0qgNDYYHbRhw6JFsdEbDMqONplEvJx0m0W9wzYVvY3eNF1c2rfBWYjQxW0sLEzFe1E">
-  <link rel="icon" type="image/png" href="https://play-lh.googleusercontent.com/R0qgNDYYHbRhw6JFsdEbDMqONplEvJx0m0W9wzYVvY3eNF1c2rfBWYjQxW0sLEzFe1E">
-
-  <!-- ✅ Manifest -->
-  <link rel="manifest" href="https://cdn.jsdelivr.net/gh/genizy/bl/manifest.webmanifest">
-
-  <!-- ✅ Style -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/genizy/bl/TemplateData/style.css">
-
-  <!-- ✅ Ads & Analytics (optional) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5221630201042895" crossorigin="anonymous"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CC4ZKKC8EF"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-CC4ZKKC8EF');
-
-    let displayMode = 'browser';
-    let isPwa = false;
-    const mqStandAlone = '(display-mode: fullscreen)';
-    if (navigator.standalone || window.matchMedia(mqStandAlone).matches) {
-      displayMode = 'fullscreen';
-      isPwa = true;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Block Blast" />
+  <link rel="apple-touch-icon" href="https://play-lh.googleusercontent.com/R0qgNDYYHbRhw6JFsdEbDMqONplEvJx0m0W9wzYVvY3eNF1c2rfBWYjQxW0sLEzFe1E" />
+  <link rel="icon" type="image/png" href="https://play-lh.googleusercontent.com/R0qgNDYYHbRhw6JFsdEbDMqONplEvJx0m0W9wzYVvY3eNF1c2rfBWYjQxW0sLEzFe1E" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Block Blast</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
     }
-    gtag('event', 'pwa_check', { 'pwa': isPwa });
-  </script>
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+    }
+  </style>
 </head>
-
 <body>
-  <div id="unity-container">
-    <canvas id="unity-canvas" width="1117" height="911" tabindex="-1" style="cursor: default;"></canvas>
-    <div id="unity-loading-bar" style="display: none;">
-      <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-full" style="width: 100%;"></div>
-      </div>
-    </div>
-    <div id="unity-warning"></div>
-  </div>
-
-  <script>
-    window.addEventListener("load", function () {
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("https://cdn.jsdelivr.net/gh/genizy/bl/ServiceWorker.js");
-      }
-    });
-
-    const container = document.querySelector("#unity-container");
-    const canvas = document.querySelector("#unity-canvas");
-    const loadingBar = document.querySelector("#unity-loading-bar");
-    const progressBarFull = document.querySelector("#unity-progress-bar-full");
-    const warningBanner = document.querySelector("#unity-warning");
-
-    function unityShowBanner(msg, type) {
-      function updateBannerVisibility() {
-        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-      }
-      const div = document.createElement('div');
-      div.innerHTML = msg;
-      warningBanner.appendChild(div);
-      if (type === 'error') div.style = 'background: red; padding: 10px;';
-      else {
-        if (type === 'warning') div.style = 'background: yellow; padding: 10px;';
-        setTimeout(() => {
-          warningBanner.removeChild(div);
-          updateBannerVisibility();
-        }, 5000);
-      }
-      updateBannerVisibility();
-    }
-
-    const buildUrl = "https://cdn.jsdelivr.net/gh/genizy/bl/Build";
-    const loaderUrl = buildUrl + "/BlockBlast1.1-8.loader.js";
-    const config = {
-      dataUrl: buildUrl + "/BlockBlast1.1-8.data.unityweb",
-      frameworkUrl: buildUrl + "/BlockBlast1.1-8.framework.js.unityweb",
-      codeUrl: buildUrl + "/BlockBlast1.1-8.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "reun",
-      productName: "Block Blast Puzzle",
-      productVersion: "1.1",
-      showBanner: unityShowBanner,
-    };
-
-    loadingBar.style.display = "block";
-    const script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
-        progressBarFull.style.width = 100 * progress + "%";
-      }).then((unityInstance) => {
-        loadingBar.style.display = "none";
-      }).catch((message) => {
-        alert(message);
-      });
-    };
-    document.body.appendChild(script);
-  </script>
+  <iframe src="https://orbit.nekoweb.org/testingblock.html"></iframe>
 </body>
 </html>
